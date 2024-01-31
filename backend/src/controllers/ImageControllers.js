@@ -2,7 +2,7 @@ const tables = require("../tables");
 
 const browse = async (req, res, next) => {
   try {
-    const messages = await tables.contact.readAll();
+    const messages = await tables.Images.readAll();
 
     res.status(200).json(messages);
   } catch (error) {
@@ -12,7 +12,7 @@ const browse = async (req, res, next) => {
 
 const read = async (req, res, next) => {
   try {
-    const message = await tables.contact.read(req.params.id);
+    const message = await tables.Images.read(req.params.id);
     if (!message) {
       res.sendStatus(404);
     } else {
@@ -25,7 +25,7 @@ const read = async (req, res, next) => {
 
 const edit = async (req, res, next) => {
   try {
-    const message = await tables.contact.edit(req.body, req.params.id);
+    const message = await tables.Images.edit(req.body, req.params.id);
     if (message == null) {
       res.sendStatus(404);
     } else {
@@ -38,7 +38,7 @@ const edit = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   try {
-    const message = await tables.contact.add(req.body);
+    const message = await tables.Images.add(req.body);
     if (!message) {
       res.sendStatus(404);
     } else {
@@ -51,7 +51,7 @@ const add = async (req, res, next) => {
 
 const destroy = async (req, res, next) => {
   try {
-    const result = await tables.contact.delete(req.params.id);
+    const result = await tables.Images.delete(req.params.id);
     if (result.affectedRows === 0) {
       res.sendStatus(404);
     } else {

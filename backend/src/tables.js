@@ -4,9 +4,26 @@
 
 // Import the manager modules responsible for handling data operations on the tables
 const ItemManager = require("./models/ItemManager");
+const AdminManager = require("./models/AdminManager");
+const AmenitieManager = require("./models/AmenitieManager");
+const BookingManager = require("./models/BookingManager");
+const FavoriteManager = require("./models/FavoriteManager");
+const ImageManager = require("./models/ImageManager");
+const ListingManager = require("./models/ListingManager");
+const ReviewManager = require("./models/ReviewManager");
+const UserManager = require("./models/UserManager");
 
 const managers = [
   ItemManager,
+  AdminManager,
+  AmenitieManager,
+  BookingManager,
+  FavoriteManager,
+  ImageManager,
+  ListingManager,
+  ReviewManager,
+  UserManager,
+
   // Add other managers here
 ];
 
