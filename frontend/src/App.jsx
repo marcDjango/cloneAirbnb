@@ -1,40 +1,26 @@
-import Counter from "./components/Counter";
-import logo from "./assets/logo.svg";
+import { Link, useLoaderData } from "react-router-dom";
 
 import "./App.css";
 
 function App() {
+  const dataLoad = useLoaderData();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React !</p>
-
-        <Counter />
-
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {" | "}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      {dataLoad &&
+        dataLoad.map((element) => {
+          return (
+            <div key={element.id} className="df-column card-listenings">
+              <p>
+                <Link to={`listings/details/${element.id}`}>
+                  {element.title}
+                </Link>
+              </p>
+              <p>{element.description}</p>
+              <p>{element.price}</p>
+            </div>
+          );
+        })}
     </div>
   );
 }

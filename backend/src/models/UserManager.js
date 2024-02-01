@@ -7,6 +7,14 @@ class UserManager extends AbstractManager {
     // Calling the constructor of the parent class (AbstractManager) with the table name
     super({ table: "Users" });
   }
+
+  async readByEmail(email) {
+    const [rows] = await this.database.query(
+      `select * from ${this.table} where email = ?`,
+      [email]
+    );
+    return rows[0];
+  }
 }
 
 // Exporting the ChargingStationManager class

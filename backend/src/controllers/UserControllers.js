@@ -22,7 +22,25 @@ const read = async (req, res, next) => {
     next(error);
   }
 };
-
+const readByEmailAndPassToNext = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await tables.Users.readByEmail(email);
+    const errors = [];
+    if (user == null) {
+      errors.push({
+        field: "Email ou le mot de passe",
+        message: "sont incorrect",
+      });
+      res.status(401).json({ validationErrors: errors });
+    } else {
+      req.user = user;
+      next();
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 const edit = async (req, res, next) => {
   try {
     const message = await tables.Users.edit(req.body, req.params.id);
@@ -65,6 +83,7 @@ const destroy = async (req, res, next) => {
 module.exports = {
   browse,
   read,
+  readByEmailAndPassToNext,
   edit,
   add,
   destroy,

@@ -13,6 +13,9 @@ const ImageController = require("./controllers/ImageControllers");
 const ListingController = require("./controllers/ListingControllers");
 const ReviewController = require("./controllers/ReviewControllers");
 const UserController = require("./controllers/UserControllers");
+const validateUserLogin = require("./middleware/validateUserLogin");
+const verifyPassword = require("./middleware/verifyPassword");
+const hashPassword = require("./middleware/hashPassword");
 
 // Routes for Admins
 router.get("/admins", AdminController.browse);
@@ -52,6 +55,10 @@ router.delete("/images/:id", ImageController.destroy);
 // Routes for Listings
 router.get("/listings", ListingController.browse);
 router.get("/listings/:id", ListingController.read);
+router.get(
+  "/listings/:listingId/reviews",
+  ReviewController.getCommentsForListingController
+);
 router.put("/listings/:id", ListingController.edit);
 router.post("/listings", ListingController.add);
 router.delete("/listings/:id", ListingController.destroy);
@@ -67,7 +74,13 @@ router.delete("/reviews/:id", ReviewController.destroy);
 router.get("/users", UserController.browse);
 router.get("/users/:id", UserController.read);
 router.put("/users/:id", UserController.edit);
-router.post("/users", UserController.add);
+router.post("/users", hashPassword, UserController.add);
 router.delete("/users/:id", UserController.destroy);
+router.post(
+  "/users/login",
+  validateUserLogin,
+  UserController.readByEmailAndPassToNext,
+  verifyPassword
+);
 
 module.exports = router;

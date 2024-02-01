@@ -23,6 +23,21 @@ const read = async (req, res, next) => {
   }
 };
 
+const getCommentsForListingController = async (req, res, next) => {
+  try {
+    const { listingId } = req.params; // Supposons que l'ID de l'annonce est dans les paramètres de l'URL
+    const comments = await tables.Reviews.getCommentsForListing(listingId);
+
+    res.json({ comments }); // Envoyer les commentaires en tant que réponse JSON
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des commentaires pour l'annonce:",
+      error
+    );
+    next(error); // Passez l'erreur au gestionnaire d'erreurs express
+  }
+};
+
 const edit = async (req, res, next) => {
   try {
     const message = await tables.Reviews.edit(req.body, req.params.id);
@@ -65,6 +80,7 @@ const destroy = async (req, res, next) => {
 module.exports = {
   browse,
   read,
+  getCommentsForListingController,
   edit,
   add,
   destroy,

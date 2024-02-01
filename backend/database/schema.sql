@@ -72,7 +72,7 @@ CREATE TABLE Reviews (
 
 -- Ajouter des utilisateurs
 INSERT INTO Users (name, firstname, email, hashed_password) VALUES
-    ('John Doe', 'John', 'john.doe@example.com', 'hashedpass1'),
+    ('John Doe', 'John', 'test@example.com', '$argon2id$v=19$m=65536,t=3,p=4$kwTr9LQMPlQJfLq5wd1vrw$jfFj6hqtZZ0DIP3kUqug+vkh+lFSIPOI60CO8L+WN6c'),
     ('Alice Smith', 'Alice', 'alice.smith@example.com', 'hashedpass2'),
     ('Bob Brown', 'Bob', 'bob.brown@example.com', 'hashedpass3'),
     ('Emma Johnson', 'Emma', 'emma.johnson@example.com', 'hashedpass4'),

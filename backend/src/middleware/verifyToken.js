@@ -35,6 +35,4 @@ const verifyToken = (req, res, next) => {
   return null;
 };
 
-module.exports = {
-  verifyToken,
-};
+module.exports = verifyToken;
