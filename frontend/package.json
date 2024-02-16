@@ -5,6 +5,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@bcad1591/react-date-picker": "^0.1.1",
+    "moment": "^2.30.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

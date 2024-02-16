@@ -1,92 +1,111 @@
-// Import database client
-const database = require("../../database/client");
-const { isArray } = require("../services/utils");
+// Importer le client de la base de données
+const pool = require("../../database/client");
 
-// Provide database access through AbstractManager class
+// Importer la fonction isArray depuis le module des services utils
+// const { isArray } = require("../services/utils");
+
+// Fournir l'accès à la base de données via la classe AbstractManager
 class AbstractManager {
   constructor({ table }) {
-    // Store the table name
+    // Stocker le nom de la table
     this.table = table;
-    // Provide access to the database client
-    this.database = database;
+    // Fournir l'accès au client de la base de données
+    this.pool = pool;
   }
 
-  // Method to read a charging station record by its ID
+  // Méthode pour lire un enregistrement par son ID
   async read(id) {
-    // Performing a database query to select a record with the given ID
-    const [row] = await this.database.query(
-      `select * from ${this.table} where id = ?`,
-      [id]
-    );
-    // Returning the first row (assuming there is only one result)
-    return row[0];
+    try {
+      // Exécuter une requête pour sélectionner un enregistrement avec l'ID donné
+      const { rows } = await this.pool.query(
+        `SELECT * FROM ${this.table} WHERE id = $1`,
+        [id]
+      );
+      // Retourner la première ligne (en supposant qu'il n'y a qu'un seul résultat)
+      return rows[0];
+    } catch (error) {
+      console.error("Error reading record:", error.message);
+      throw error;
+    }
   }
 
-  // Method to read all charging station records
+  // Méthode pour lire tous les enregistrements
   async readAll() {
-    // Performing a database query to select all records from the charging station table
-    const [rows] = await this.database.query(`select * from ${this.table}`);
-    // console.log(rows);
-    // Returning all rows
-    return rows;
+    try {
+      // Exécuter une requête pour sélectionner tous les enregistrements de la table
+      const { rows } = await this.pool.query(`SELECT * FROM ${this.table}`);
+      // Retourner tous les enregistrements
+      return rows;
+    } catch (error) {
+      console.error("Error reading all records:", error.message);
+      throw error;
+    }
   }
 
-  // Method to edit/update a charging station record by ID
+  // Méthode pour éditer/mettre à jour un enregistrement par son ID
   async edit(body, id) {
-    // Converting values in the body to an array (stringifying arrays if present)
-    const values = isArray(body);
-
-    // Getting the keys (parameters) from the body
-    const params = Object.keys(body);
-
-    // Creating a string of parameters for the SQL SET clause
-    const setParams = params.map((item) => `${item} = ?`).join(", ");
-
-    // Performing a database query to update the record with the given ID
-    const [rows] = await this.database.query(
-      `UPDATE ${this.table} SET ${setParams} WHERE id = ?`,
-      [...values, id]
-    );
-
-    // Returning the result of the update operation
-    return rows;
+    try {
+      // Obtenir les valeurs du corps de la requête
+      const values = Object.values(body);
+      // Obtenir les clés du corps de la requête
+      const keys = Object.keys(body);
+      // Construire la partie SET de la requête SQL
+      const setClause = keys
+        .map((key, index) => `${key} = $${index + 1}`)
+        .join(", ");
+      // Exécuter une requête pour mettre à jour l'enregistrement avec l'ID donné
+      const { rowCount } = await this.pool.query(
+        `UPDATE ${this.table} SET ${setClause} WHERE id = $${keys.length + 1}`,
+        [...values, id]
+      );
+      // Retourner le nombre de lignes affectées
+      return rowCount;
+    } catch (error) {
+      console.error("Error editing record:", error.message);
+      throw error;
+    }
   }
 
-  // Method to add/insert a new charging station record
+  // Méthode pour ajouter/inserer un nouvel enregistrement
   async add(body) {
-    // Converting values in the body to an array (stringifying arrays if present)
-    const values = isArray(body);
-
-    // Getting the keys (parameters) from the body
-    const params = Object.keys(body);
-
-    // Creating a string of parameters for the SQL INSERT INTO clause
-    const setParams = params.join(", ");
-
-    // Creating a placeholder string for the values in the SQL query
-    const placeholder = params.map(() => "? ").join(", ");
-
-    // Performing a database query to insert a new record into the charging station table
-    const [rows] = await this.database.query(
-      `INSERT INTO ${this.table}(${setParams}) VALUES (${placeholder})`,
-      [...values]
-    );
-
-    // Returning the result of the insert operation
-    return rows.insertId;
+    try {
+      // Obtenir les valeurs du corps de la requête
+      const values = Object.values(body);
+      // Obtenir les clés du corps de la requête
+      const keys = Object.keys(body);
+      // Construire la partie VALUES de la requête SQL
+      const placeholders = keys.map((key, index) => `$${index + 1}`).join(", ");
+      // Exécuter une requête pour insérer un nouvel enregistrement dans la table
+      const { rows } = await this.pool.query(
+        `INSERT INTO ${this.table} (${keys.join(
+          ", "
+        )}) VALUES (${placeholders}) RETURNING id`,
+        values
+      );
+      // Retourner l'ID de l'enregistrement inséré
+      return rows[0].id;
+    } catch (error) {
+      console.error("Error adding record:", error.message);
+      throw error;
+    }
   }
 
-  // Method to delete a charging station record by its ID
+  // Méthode pour supprimer un enregistrement par son ID
   async delete(id) {
-    // Performing a database query to delete a record with the given ID
-    const [rows] = await this.database.query(
-      `delete from ${this.table} where id = ?`,
-      [id]
-    );
-    // Returning the result of the delete operation
-    return rows;
+    try {
+      // Exécuter une requête pour supprimer l'enregistrement avec l'ID donné
+      const { rowCount } = await this.pool.query(
+        `DELETE FROM ${this.table} WHERE id = $1`,
+        [id]
+      );
+      // Retourner le nombre de lignes affectées
+      return rowCount;
+    } catch (error) {
+      console.error("Error deleting record:", error.message);
+      throw error;
+    }
   }
 }
 
-// Ready to export
+// Prêt à exporter
 module.exports = AbstractManager;

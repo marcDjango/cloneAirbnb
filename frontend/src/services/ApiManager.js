@@ -1,6 +1,6 @@
 const baseUrl = `${import.meta.env.VITE_BACKEND_URL}/api/`;
 
-const getToken = () => JSON.parse(localStorage.getItem("token"));
+const getToken = () => localStorage.getItem("token");
 
 const setToken = (key, token) => localStorage.setItem(key, token);
 
@@ -32,6 +32,7 @@ const get = async (endpoint) => {
 };
 
 const post = async (endpoint, content) => {
+  // console.log(content);
   try {
     const response = await fetch(baseUrl + endpoint, {
       method: "POST",

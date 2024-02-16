@@ -13,6 +13,7 @@ const ImageController = require("./controllers/ImageControllers");
 const ListingController = require("./controllers/ListingControllers");
 const ReviewController = require("./controllers/ReviewControllers");
 const UserController = require("./controllers/UserControllers");
+const ListingAmenitiesController = require("./controllers/ListingAmenitiesControllers");
 const validateUserLogin = require("./middleware/validateUserLogin");
 const verifyPassword = require("./middleware/verifyPassword");
 const hashPassword = require("./middleware/hashPassword");
@@ -30,6 +31,9 @@ router.get("/amenities/:id", AmenitieController.read);
 router.put("/amenities/:id", AmenitieController.edit);
 router.post("/amenities", AmenitieController.add);
 router.delete("/amenities/:id", AmenitieController.destroy);
+
+// Routes for liaison Listings/Amenities
+router.post("/listingAmenities", ListingAmenitiesController.add);
 
 // Routes for Bookings
 router.get("/bookings", BookingController.browse);
@@ -59,6 +63,14 @@ router.get(
   "/listings/:listingId/reviews",
   ReviewController.getCommentsForListingController
 );
+router.get(
+  "/listings/:listingId/amenities",
+  AmenitieController.getAllAmenitiesForListing
+);
+router.get(
+  "/listings/:listingId/images",
+  ImageController.getAllImagesForListing
+);
 router.put("/listings/:id", ListingController.edit);
 router.post("/listings", ListingController.add);
 router.delete("/listings/:id", ListingController.destroy);
@@ -82,5 +94,9 @@ router.post(
   UserController.readByEmailAndPassToNext,
   verifyPassword
 );
+
+// Route for CLOUDINARY
+router.post("/images/upload", ImageController.uploadCloud);
+router.get("/images/images", ImageController.getImagesFromCloud);
 
 module.exports = router;

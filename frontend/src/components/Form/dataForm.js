@@ -1,4 +1,4 @@
-const user = {
+export const users = {
   name: {
     value: "Nom",
     type: "text",
@@ -26,4 +26,20 @@ const user = {
   },
 };
 
-export default user;
+export const newListing = {
+  title: {
+    value: "title",
+    type: "text",
+    option: "required",
+  },
+  description: {
+    value: "description",
+    type: "text",
+    option: "required",
+  },
+  price: {
+    value: "price/nigth",
+    type: "number",
+    option: "required",
+  },
+};

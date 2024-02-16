@@ -25,7 +25,13 @@ function Login() {
     FetchLogin(data);
   };
   return (
-    <div>{!token && <Form data={userLogin} FormPostData={FormPostData} />}</div>
+    <div>
+      {!token ? (
+        <Form data={userLogin} FormPostData={FormPostData} />
+      ) : (
+        "Bonjour Marcelo"
+      )}
+    </div>
   );
 }
 

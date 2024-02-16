@@ -1,6 +1,6 @@
 -- Utilisateurs
 CREATE TABLE Users (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     firstname VARCHAR(45) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -9,14 +9,14 @@ CREATE TABLE Users (
 
 -- Administrateurs
 CREATE TABLE Admins (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     UserID INT,
     FOREIGN KEY (UserID) REFERENCES Users(id)
 );
 
 -- Listings
 CREATE TABLE Listings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     title VARCHAR(255),
     description TEXT,
     price DECIMAL(10, 2),
@@ -26,7 +26,7 @@ CREATE TABLE Listings (
 
 -- Bookings
 CREATE TABLE Bookings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     start_date DATE,
     end_date DATE,
     listing_id INT,
@@ -37,7 +37,7 @@ CREATE TABLE Bookings (
 
 -- Favorites
 CREATE TABLE Favorites (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id INT,
     listing_id INT,
     FOREIGN KEY (user_id) REFERENCES Users(id),
@@ -46,7 +46,7 @@ CREATE TABLE Favorites (
 
 -- Images
 CREATE TABLE Images (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     url VARCHAR(255),
     listing_id INT,
     FOREIGN KEY (listing_id) REFERENCES Listings(id)
@@ -54,13 +54,22 @@ CREATE TABLE Images (
 
 -- Amenities
 CREATE TABLE Amenities (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(255)
+);
+
+-- ListingAmenities
+CREATE TABLE ListingAmenities (
+    id SERIAL PRIMARY KEY,
+    listing_id INT,
+    amenity_id INT,
+    FOREIGN KEY (listing_id) REFERENCES Listings(id),
+    FOREIGN KEY (amenity_id) REFERENCES Amenities(id)
 );
 
 -- Reviews
 CREATE TABLE Reviews (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     rating DECIMAL(2, 1),
     comment TEXT,
     listing_id INT,
@@ -68,7 +77,6 @@ CREATE TABLE Reviews (
     FOREIGN KEY (listing_id) REFERENCES Listings(id),
     FOREIGN KEY (author_id) REFERENCES Users(id)
 );
-
 
 -- Ajouter des utilisateurs
 INSERT INTO Users (name, firstname, email, hashed_password) VALUES
@@ -127,16 +135,16 @@ INSERT INTO Favorites (user_id, listing_id) VALUES
 
 -- Ajouter des images
 INSERT INTO Images (url, listing_id) VALUES
-    ('https://example.com/image1.jpg', 1),
-    ('https://example.com/image2.jpg', 2),
-    ('https://example.com/image3.jpg', 3),
-    ('https://example.com/image4.jpg', 4),
-    ('https://example.com/image5.jpg', 5),
-    ('https://example.com/image6.jpg', 6),
-    ('https://example.com/image7.jpg', 7),
-    ('https://example.com/image8.jpg', 8),
-    ('https://example.com/image9.jpg', 9),
-    ('https://example.com/image10.jpg', 10);
+('http://localhost:3000/src/assets/images/villa/villa1.jpg', 1),
+('http://localhost:3000/src/assets/images/villa/villa2.jpg', 2),
+('http://localhost:3000/src/assets/images/villa/villa3.jpg', 3),
+('http://localhost:3000/src/assets/images/villa/villa4.jpg', 4),
+('http://localhost:3000/src/assets/images/villa/villa5.jpg', 5),
+('http://localhost:3000/src/assets/images/villa/villa6.jpg', 6),
+('http://localhost:3000/src/assets/images/villa/villa7.jpg', 7),
+('http://localhost:3000/src/assets/images/villa/villa8.jpg', 8),
+('http://localhost:3000/src/assets/images/villa/villa9.jpg', 9),
+('http://localhost:3000/src/assets/images/villa/villa10.jpg', 10);
 
 -- Ajouter des équipements
 INSERT INTO Amenities (name) VALUES
@@ -150,6 +158,88 @@ INSERT INTO Amenities (name) VALUES
     ('Salle de sport'),
     ('Sauna'),
     ('Vue panoramique');
+
+-- Ajouter des liens entre les annonces et les équipements
+INSERT INTO ListingAmenities (listing_id, amenity_id) VALUES
+    -- Annonce 1
+    (1, 1),  -- Wifi
+    (1, 3),  -- Cuisine équipée
+    (1, 6),  -- Balcon
+    (1, 7),  -- Jardin
+    (1, 8),  -- Salle de sport
+    (1, 10), -- Vue panoramique
+
+    -- Annonce 2
+    (2, 1),  -- Wifi
+    (2, 2),  -- Parking
+    (2, 3),  -- Cuisine équipée
+    (2, 4),  -- Piscine
+    (2, 7),  -- Jardin
+    (2, 10), -- Vue panoramique
+
+        -- Annonce 3
+    (3, 1),  -- Wifi
+    (3, 3),  -- Cuisine équipée
+    (3, 5),  -- Jacuzzi
+    (3, 6),  -- Balcon
+    (3, 7),  -- Jardin
+    (3, 9),  -- Sauna
+
+    -- Annonce 4
+    (4, 2),  -- Parking
+    (4, 3),  -- Cuisine équipée
+    (4, 5),  -- Jacuzzi
+    (4, 6),  -- Balcon
+    (4, 7),  -- Jardin
+    (4, 10), -- Vue panoramique
+
+      -- Annonce 5
+    (5, 1),  -- Wifi
+    (5, 2),  -- Parking
+    (5, 3),  -- Cuisine équipée
+    (5, 4),  -- Piscine
+    (5, 5),  -- Jacuzzi
+    (5, 9),  -- Sauna
+
+    -- Annonce 6
+    (6, 1),  -- Wifi
+    (6, 4),  -- Piscine
+    (6, 6),  -- Balcon
+    (6, 7),  -- Jardin
+    (6, 8),  -- Salle de sport
+    (6, 10), -- Vue panoramique
+
+    -- Annonce 7
+    (7, 1),  -- Wifi
+    (7, 2),  -- Parking
+    (7, 3),  -- Cuisine équipée
+    (7, 4),  -- Piscine
+    (7, 8),  -- Salle de sport
+    (7, 10), -- Vue panoramique
+
+    -- Annonce 8
+    (8, 1),  -- Wifi
+    (8, 7),  -- Jardin
+    (8, 8),  -- Salle de sport
+    (8, 9),  -- Sauna
+    (8, 10), -- Vue panoramique
+    (8, 5),  -- Jacuzzi
+
+    -- Annonce 9
+    (9, 1),  -- Wifi
+    (9, 3),  -- Cuisine équipée
+    (9, 6),  -- Balcon
+    (9, 7),  -- Jardin
+    (9, 8),  -- Salle de sport
+    (9, 10), -- Vue panoramique
+
+    -- Annonce 10
+    (10, 2),  -- Parking
+    (10, 3),  -- Cuisine équipée
+    (10, 6),  -- Balcon
+    (10, 7),  -- Jardin
+    (10, 8),  -- Salle de sport
+    (10, 10); -- Vue panoramique
 
 -- Ajouter des évaluations
 INSERT INTO Reviews (rating, comment, listing_id, author_id) VALUES

@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "../components/Form/form";
-import users from "../components/Form/dataForm";
+import { users } from "../components/Form/dataForm";
 import ApiManager from "../services/ApiManager";
 
 function RegistrationForm() {
@@ -29,9 +29,9 @@ function RegistrationForm() {
   };
 
   return (
-    <div className="background-modal">
-      <div className="registration-contain">
-        <Form data={users} FormPostData={FormPostData} />;
+    <div className="df-column">
+      <div className="row">
+        <Form data={users} FormPostData={FormPostData} />
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ const ImageManager = require("./models/ImageManager");
 const ListingManager = require("./models/ListingManager");
 const ReviewManager = require("./models/ReviewManager");
 const UserManager = require("./models/UserManager");
+const ListingAmenitiesManager = require("./models/ListingAmenitiesManager");
 
 const managers = [
   ItemManager,
@@ -23,6 +24,7 @@ const managers = [
   ListingManager,
   ReviewManager,
   UserManager,
+  ListingAmenitiesManager,
 
   // Add other managers here
 ];
